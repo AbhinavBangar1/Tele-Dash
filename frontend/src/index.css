@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #00f5a0;
+  --danger: #ff4757;
+  --warn: #f5a623;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: #080b10;
+  color: #ffffff;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a2030;
+  border-radius: 2px;
+}
+
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #acaeb6 !important;
+}
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.glow {
+  text-shadow: 0 0 8px var(--accent), 0 0 20px var(--accent);
+}
+
+
+.card {
+  background: #0d1117;
+  border: 1px solid #373d4d;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
