@@ -3,6 +3,7 @@ import { useSensor } from "../hooks/useSensor";
 export default function Device() {
   const {
     status,
+    connected,
     error,
     packetCount,
     requestAndStart,
@@ -11,6 +12,7 @@ export default function Device() {
 
   const isStreaming = status === "streaming";
   const isRequesting = status === "requesting";
+  const isOfflineQueueing = isStreaming && !connected;
 
   return (
     <main className="max-w-sm mx-auto px-4 py-8 flex flex-col gap-6">
@@ -31,19 +33,28 @@ export default function Device() {
       </div>
 
       {/* Status card */}
-      <div className="card flex flex-col items-center gap-3 py-6">
+      <div className="card flex flex-col items-center gap-3 py-6 relative">
+        {isOfflineQueueing && (
+          <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full border border-warn/50 text-warn bg-warn/10 animate-pulse">
+            QUEUING
+          </span>
+        )}
         <div
           className={`w-4 h-4 rounded-full transition-all duration-500 ${
-            isStreaming
+            isStreaming && connected
               ? "bg-accent shadow-[0_0_12px_#00f5a0] animate-pulse"
+              : isOfflineQueueing
+              ? "bg-warn shadow-[0_0_12px_#ffcc00] animate-pulse"
               : status === "error"
               ? "bg-danger"
               : "bg-muted"
           }`}
         />
         <p className="text-sm font-mono tracking-widest uppercase text-slate-300">
-          {isStreaming
+          {isStreaming && connected
             ? "Streaming"
+            : isOfflineQueueing
+            ? "Offline (Saving Local)"
             : isRequesting
             ? "Requesting permission…"
             : status === "error"
@@ -52,7 +63,9 @@ export default function Device() {
         </p>
         {isStreaming && (
           <p className="text-xs text-dim">
-            <span className="text-accent font-bold">{packetCount}</span> packets sent
+            <span className={isOfflineQueueing ? "text-warn font-bold" : "text-accent font-bold"}>
+              {packetCount}
+            </span> packets generated
           </p>
         )}
       </div>

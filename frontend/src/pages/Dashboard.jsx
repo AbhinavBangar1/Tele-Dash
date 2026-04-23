@@ -10,24 +10,46 @@ export default function Dashboard() {
   const {
     connected,
     stats,
+    activeDevices,
+    selectedDevice,
+    setSelectedDevice,
     accelData,
     intensityData,
     gps,
     lastUpdated,
     anomaly,
+    anomalyMessage,
   } = useDashboard();
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-100">
-          Live Telemetry
-          <span className="text-accent">.</span>
-        </h1>
-        <p className="text-dim text-xs mt-1 tracking-wide">
-          Real-time mobile sensor stream via Socket.IO
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-100">
+            Live Telemetry
+            <span className="text-accent">.</span>
+          </h1>
+          <p className="text-dim text-xs mt-1 tracking-wide">
+            Real-time mobile sensor stream via Socket.IO
+          </p>
+        </div>
+        
+        {/* Device Selector */}
+        {activeDevices.length > 0 && (
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-dim uppercase tracking-widest">Device:</label>
+            <select 
+              className="bg-void border border-border rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-accent"
+              value={selectedDevice || ""}
+              onChange={(e) => setSelectedDevice(e.target.value)}
+            >
+              {activeDevices.map(id => (
+                <option key={id} value={id}>{id.substring(0,8)}...</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Connection + pill status */}
@@ -39,7 +61,7 @@ export default function Dashboard() {
       />
 
       {/* Stats cards */}
-      <StatsGrid stats={stats} lastUpdated={lastUpdated} anomaly={anomaly} />
+      <StatsGrid stats={stats} lastUpdated={lastUpdated} />
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
@@ -70,7 +92,7 @@ export default function Dashboard() {
       </div>
 
       {/* Floating anomaly toast */}
-      <AnomalyAlert anomaly={anomaly} />
+      <AnomalyAlert anomaly={anomaly} message={anomalyMessage} />
     </main>
   );
 }

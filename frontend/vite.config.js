@@ -6,5 +6,14 @@ export default defineConfig({
   server: {
     host: true, // expose on LAN so phone can access via IP
     port: 5173,
+    proxy: {
+      "/socket.io": {
+        target: "http://localhost:4000",
+        ws: true,
+      },
+      "/api": {
+        target: "http://localhost:4000",
+      },
+    },
   },
 });
